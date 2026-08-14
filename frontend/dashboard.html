@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TaskPilot — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ===================== Sidebar ===================== -->
+  <aside class="sidebar">
+    <div class="sidebar-brand"><span class="dot"></span> TaskPilot</div>
+
+    <button class="btn btn-signal" id="btn-new-project" style="width:100%; justify-content:center;">+ New project</button>
+
+    <div class="sidebar-section-label">Projects</div>
+    <ul class="project-list" id="project-list">
+      <!-- populated by dashboard.js -->
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar" id="user-avatar">?</div>
+        <div class="who">
+          <div class="name" id="user-name">—</div>
+          <div class="email" id="user-email">—</div>
+        </div>
+      </div>
+      <button class="logout" id="btn-logout">Sign out</button>
+    </div>
+  </aside>
+
+  <!-- ===================== Main ===================== -->
+  <main class="main">
+
+    <!-- Empty state when no project selected -->
+    <div class="empty-state" id="no-project-state">
+      <h2>No project selected</h2>
+      <p>Create a project, then describe a goal and let TaskPilot draft the task list for you.</p>
+      <button class="btn btn-primary" id="btn-new-project-empty">+ New project</button>
+    </div>
+
+    <!-- Active project view -->
+    <div id="project-view" style="display:none;">
+      <div class="main-header">
+        <div>
+          <h1 id="project-title">Project name</h1>
+          <p class="project-desc" id="project-description"></p>
+        </div>
+        <div class="main-header-actions">
+          <button class="btn btn-ghost" id="btn-manage-members">Members</button>
+          <button class="btn btn-signal" id="btn-open-ai">✦ AI breakdown</button>
+          <button class="btn btn-primary" id="btn-new-task">+ New task</button>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div class="view-toggle">
+          <button type="button" id="view-list" class="active">List</button>
+          <button type="button" id="view-kanban">Board</button>
+        </div>
+        <div class="filters">
+          <select id="filter-status">
+            <option value="">All statuses</option>
+            <option value="todo">To do</option>
+            <option value="in_progress">In progress</option>
+            <option value="done">Done</option>
+          </select>
+          <select id="filter-priority">
+            <option value="">All priorities</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+          <select id="filter-assignee">
+            <option value="">Everyone</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- List view -->
+      <div id="list-view">
+        <table class="task-table">
+          <thead>
+            <tr>
+              <th>Task</th>
+              <th>Status</th>
+              <th>Priority</th>
+              <th>Due</th>
+              <th>Estimate</th>
+              <th>Assignee</th>
+            </tr>
+          </thead>
+          <tbody id="task-table-body">
+          </tbody>
+        </table>
+        <div class="table-empty" id="table-empty" style="display:none;">No tasks match these filters yet.</div>
+      </div>
+
+      <!-- Kanban view -->
+      <div id="kanban-view" style="display:none;">
+        <div class="kanban">
+          <div class="kanban-col" data-status="todo">
+            <div class="kanban-col-head"><h3>To do</h3><span class="count" id="count-todo">0</span></div>
+            <div class="kanban-cards" id="cards-todo"></div>
+          </div>
+          <div class="kanban-col" data-status="in_progress">
+            <div class="kanban-col-head"><h3>In progress</h3><span class="count" id="count-in_progress">0</span></div>
+            <div class="kanban-cards" id="cards-in_progress"></div>
+          </div>
+          <div class="kanban-col" data-status="done">
+            <div class="kanban-col-head"><h3>Done</h3><span class="count" id="count-done">0</span></div>
+            <div class="kanban-cards" id="cards-done"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ===================== Modal: New / Edit project ===================== -->
+<div class="modal-backdrop" id="modal-project">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <h2 id="project-modal-title">New project</h2>
+      </div>
+      <button class="modal-close" data-close="modal-project">&times;</button>
+    </div>
+    <div class="form-error" id="project-form-error"></div>
+    <form id="form-project">
+      <div class="field">
+        <label for="proj-name">Project name</label>
+        <input type="text" id="proj-name" required placeholder="e.g. Marketing website launch" />
+      </div>
+      <div class="field">
+        <label for="proj-desc">Description (optional)</label>
+        <textarea id="proj-desc" placeholder="What is this project about?"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" data-close="modal-project">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="project-submit-btn">Create project</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===================== Modal: New / Edit task ===================== -->
+<div class="modal-backdrop" id="modal-task">
+  <div class="modal">
+    <div class="modal-head">
+      <div><h2 id="task-modal-title">New task</h2></div>
+      <button class="modal-close" data-close="modal-task">&times;</button>
+    </div>
+    <div class="form-error" id="task-form-error"></div>
+    <form id="form-task">
+      <input type="hidden" id="task-id" />
+      <div class="field">
+        <label for="task-title">Title</label>
+        <input type="text" id="task-title" required placeholder="e.g. Draft homepage copy" />
+      </div>
+      <div class="field">
+        <label for="task-desc">Description</label>
+        <textarea id="task-desc" placeholder="Add detail so whoever picks this up knows what 'done' looks like"></textarea>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="task-status">Status</label>
+          <select id="task-status">
+            <option value="todo">To do</option>
+            <option value="in_progress">In progress</option>
+            <option value="done">Done</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="task-priority">Priority</label>
+          <select id="task-priority">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="task-due">Due date</label>
+          <input type="date" id="task-due" />
+        </div>
+        <div class="field">
+          <label for="task-estimate">Estimate (hours)</label>
+          <input type="number" id="task-estimate" min="0" max="2000" placeholder="e.g. 6" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="task-assignee">Assignee</label>
+        <select id="task-assignee">
+          <option value="">Unassigned</option>
+        </select>
+      </div>
+      <div class="modal-actions split">
+        <button type="button" class="btn btn-danger-ghost" id="task-delete-btn" style="display:none;">Delete task</button>
+        <div style="display:flex; gap:10px;">
+          <button type="button" class="btn btn-ghost" data-close="modal-task">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="task-submit-btn">Create task</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===================== Modal: Members ===================== -->
+<div class="modal-backdrop" id="modal-members">
+  <div class="modal">
+    <div class="modal-head">
+      <div><h2>Project members</h2><p class="sub">People who can view and work on this project's tasks.</p></div>
+      <button class="modal-close" data-close="modal-members">&times;</button>
+    </div>
+    <div class="form-error" id="members-form-error"></div>
+    <form id="form-add-member" style="display:flex; gap:8px; margin-bottom:18px;">
+      <input type="email" id="member-email" placeholder="teammate@company.com" required style="flex:1;" />
+      <button type="submit" class="btn btn-primary btn-sm">Add</button>
+    </form>
+    <ul class="subtask-list" id="members-list"></ul>
+  </div>
+</div>
+
+<!-- ===================== Modal: AI breakdown (the standout feature) ===================== -->
+<div class="modal-backdrop" id="modal-ai">
+  <div class="modal modal-wide">
+    <div class="modal-head">
+      <div>
+        <h2>✦ AI task breakdown</h2>
+        <p class="sub">Describe a high-level goal. TaskPilot calls Claude to draft a sequenced subtask list with time estimates — edit anything before adding it to the board.</p>
+      </div>
+      <button class="modal-close" data-close="modal-ai">&times;</button>
+    </div>
+
+    <div class="form-error" id="ai-form-error"></div>
+
+    <div class="ai-goal-row">
+      <div class="field">
+        <label for="ai-goal">High-level goal</label>
+        <input type="text" id="ai-goal" placeholder="e.g. Launch a marketing website for our product" />
+      </div>
+      <button class="btn btn-signal" id="ai-generate-btn">Generate subtasks</button>
+    </div>
+
+    <div class="ai-loading" id="ai-loading">
+      <div class="spinner"></div> Asking Claude to break this down…
+    </div>
+
+    <ul class="subtask-list" id="ai-subtask-list"></ul>
+
+    <div class="ai-summary-bar" id="ai-summary-bar" style="display:none;"></div>
+
+    <div class="modal-actions" id="ai-apply-row" style="display:none;">
+      <button type="button" class="btn btn-ghost" data-close="modal-ai">Cancel</button>
+      <button type="button" class="btn btn-primary" id="ai-apply-btn">Add these tasks to the project</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-region" id="toast-region"></div>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>
