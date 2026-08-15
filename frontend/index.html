@@ -3,72 +3,184 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>TaskPilot — Sign in</title>
+<title>TaskPilot — Describe the goal. Get the plan.</title>
+<meta name="description" content="TaskPilot turns a one-line goal into a sequenced set of subtasks with time estimates, organized on a board you can edit, assign, and track." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/landing.css" />
 </head>
-<body>
+<body class="landing">
 
-<div class="auth-shell">
-  <div class="auth-hero">
-    <div class="auth-brand"><span class="dot"></span> TaskPilot</div>
-    <div class="auth-hero-copy">
-      <h1>Describe the goal. Get the plan.</h1>
-      <p>TaskPilot turns a one-line goal — "launch a marketing website" — into a sequenced set of subtasks with time estimates, ready to assign and track.</p>
+<!-- ===================== Nav ===================== -->
+<nav class="landing-nav">
+  <div class="container">
+    <a class="brand" href="index.html"><span class="dot"></span> TaskPilot</a>
+    <div class="landing-nav-links">
+      <a href="#how-it-works">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#stack">Under the hood</a>
     </div>
-    <div class="auth-hero-signature">
-      01 · REGISTER &amp; SIGN IN&nbsp;&nbsp; 02 · CREATE A PROJECT&nbsp;&nbsp; 03 · TYPE A GOAL&nbsp;&nbsp; 04 · AI BREAKS IT DOWN&nbsp;&nbsp; 05 · EDIT, ASSIGN, TRACK
+    <div class="landing-nav-actions">
+      <a class="btn btn-ghost btn-sm" href="login.html">Sign in</a>
+      <a class="btn btn-signal btn-sm" href="login.html#register">Create account</a>
     </div>
   </div>
+</nav>
 
-  <div class="auth-panel">
-    <div class="auth-card">
-      <h2 id="auth-title">Welcome back</h2>
-      <p class="sub" id="auth-sub">Sign in to your projects.</p>
-
-      <div class="auth-toggle">
-        <button type="button" id="tab-login" class="active">Sign in</button>
-        <button type="button" id="tab-register">Create account</button>
+<!-- ===================== Hero ===================== -->
+<header class="hero">
+  <div class="container">
+    <div>
+      <div class="hero-eyebrow">AI-assisted planning</div>
+      <h1>Describe the goal.<br />Get the plan.</h1>
+      <p class="lede">Type a one-line goal — "launch a marketing website" — and TaskPilot sequences it into ordered subtasks with time estimates, ready to edit, assign, and track on a board.</p>
+      <div class="hero-actions">
+        <a class="btn btn-signal" href="login.html#register">Create free account</a>
+        <a class="btn btn-ghost" href="login.html">Sign in</a>
       </div>
+      <div class="hero-note">No credit card. Takes about 30 seconds.</div>
+    </div>
 
-      <div class="form-error" id="auth-error"></div>
-
-      <form class="auth-form active" id="form-login">
-        <div class="field">
-          <label for="login-email">Email</label>
-          <input type="email" id="login-email" required autocomplete="email" placeholder="you@company.com" />
+    <div class="mock-board-frame" aria-hidden="true">
+      <div class="mock-board-header">
+        <span></span><span></span><span></span>
+        <span class="label">launch-marketing-site</span>
+      </div>
+      <div class="mock-board">
+        <div>
+          <div class="mock-col-label">To do</div>
+          <div class="mock-card ai">
+            <span class="ai-badge">AI BREAKDOWN</span>
+            Draft homepage copy
+            <span class="est">~2h · unassigned</span>
+          </div>
+          <div class="mock-card">Set up analytics<span class="est">~30m</span></div>
         </div>
-        <div class="field">
-          <label for="login-password">Password</label>
-          <input type="password" id="login-password" required autocomplete="current-password" placeholder="••••••••" />
+        <div>
+          <div class="mock-col-label">In progress</div>
+          <div class="mock-card">Design hero section<span class="est">~3h · Shilpa</span></div>
         </div>
-        <button type="submit" class="btn btn-signal">Sign in</button>
-      </form>
-
-      <form class="auth-form" id="form-register">
-        <div class="field">
-          <label for="reg-name">Full name</label>
-          <input type="text" id="reg-name" required autocomplete="name" placeholder="Shilpa Shree" />
+        <div>
+          <div class="mock-col-label">Done</div>
+          <div class="mock-card">Register domain<span class="est">~10m</span></div>
         </div>
-        <div class="field">
-          <label for="reg-email">Email</label>
-          <input type="email" id="reg-email" required autocomplete="email" placeholder="you@company.com" />
-        </div>
-        <div class="field">
-          <label for="reg-password">Password</label>
-          <input type="password" id="reg-password" required minlength="8" autocomplete="new-password" placeholder="At least 8 characters" />
-        </div>
-        <button type="submit" class="btn btn-signal">Create account</button>
-      </form>
+      </div>
     </div>
   </div>
-</div>
+</header>
 
-<div class="toast-region" id="toast-region"></div>
+<!-- ===================== How it works ===================== -->
+<section class="section" id="how-it-works">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">Process</div>
+      <h2>From one line to a working board</h2>
+      <p>Five steps, start to finish — the same order every time.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num">01</div>
+        <h3>Register &amp; sign in</h3>
+        <p>Create an account with an email and password. No verification steps in the way.</p>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <h3>Create a project</h3>
+        <p>Give it a name. Projects keep separate goals from bleeding into one board.</p>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <h3>Type a goal</h3>
+        <p>Write what you're trying to achieve, in plain language — one line is enough.</p>
+      </div>
+      <div class="step">
+        <div class="num">04</div>
+        <h3>AI breaks it down</h3>
+        <p>Claude reads the goal and returns ordered subtasks, each with a time estimate.</p>
+      </div>
+      <div class="step">
+        <div class="num">05</div>
+        <h3>Edit, assign, track</h3>
+        <p>Drag cards across To do, In Progress, and Done. Rewrite, reassign, or delete anything.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-<script src="js/config.js"></script>
-<script src="js/api.js"></script>
-<script src="js/auth.js"></script>
+<!-- ===================== Features ===================== -->
+<section class="section section-alt" id="features">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">What's in the box</div>
+      <h2>Built for planning, not just listing tasks</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="tag">AI TASK BREAKDOWN</div>
+        <h3>One goal in, a sequenced plan out</h3>
+        <p>The Anthropic Claude API reads a one-line goal and returns an ordered list of subtasks with time estimates — planning starts already organized, not blank.</p>
+      </div>
+      <div class="feature-card">
+        <div class="tag">KANBAN BOARD</div>
+        <h3>Drag tasks across three states</h3>
+        <p>To do, In Progress, and Done. Reordering and status changes update instantly, no page reloads or lost position.</p>
+      </div>
+      <div class="feature-card">
+        <div class="tag">PROJECTS</div>
+        <h3>Group tasks, not just tag them</h3>
+        <p>Every task lives inside a project. Switch between projects from the sidebar and keep unrelated goals from mixing.</p>
+      </div>
+      <div class="feature-card">
+        <div class="tag">AUTH &amp; ISOLATION</div>
+        <h3>Secure by default</h3>
+        <p>JWT-based sessions and hashed passwords. Every account only ever sees its own projects and tasks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== Stack ===================== -->
+<section class="section" id="stack">
+  <div class="container">
+    <div class="section-head" style="margin-bottom: 0;">
+      <div class="section-eyebrow">Under the hood</div>
+      <h2>Built with</h2>
+      <div class="stack-strip">
+        <span class="stack-pill">FastAPI</span>
+        <span class="stack-pill">SQLAlchemy</span>
+        <span class="stack-pill">MySQL</span>
+        <span class="stack-pill">Vanilla JS</span>
+        <span class="stack-pill">Anthropic Claude API</span>
+        <span class="stack-pill">JWT auth</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== Closing CTA ===================== -->
+<section class="section">
+  <div class="container">
+    <div class="cta-band">
+      <div>
+        <h2>Plan your next goal in one line.</h2>
+        <p>Free to try. No credit card required.</p>
+      </div>
+      <div class="cta-band-actions">
+        <a class="btn btn-signal" href="login.html#register">Create free account</a>
+        <a class="btn btn-ghost" style="border-color:#3a3d49; color:#fff;" href="https://github.com/shilpa159/taskpilot" target="_blank" rel="noopener">View the code ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== Footer ===================== -->
+<footer class="landing-footer">
+  <div class="container" style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+    <span>© 2026 TaskPilot</span>
+    <a href="https://github.com/shilpa159/taskpilot" target="_blank" rel="noopener">Open source on GitHub ↗</a>
+  </div>
+</footer>
+
 </body>
 </html>
