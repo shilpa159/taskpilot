@@ -35,7 +35,6 @@ services:
   - type: web
     name: taskpilot-frontend
     runtime: static
-    plan: free
     rootDir: frontend
     buildCommand: ""
     staticPublishPath: .
