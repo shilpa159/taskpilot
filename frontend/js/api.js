@@ -25,7 +25,7 @@ const Auth = {
   },
   requireAuthOrRedirect() {
     if (!this.getToken()) {
-      window.location.href = "index.html";
+      window.location.href = "login.html";
     }
   },
 };
@@ -67,7 +67,7 @@ async function apiRequest(path, { method = "GET", body = null, auth = true } = {
   if (!response.ok) {
     if (response.status === 401 && auth) {
       Auth.clear();
-      window.location.href = "index.html";
+      window.location.href = "login.html";
     }
     const detail = (data && data.detail) || response.statusText || "Request failed";
     throw new Error(typeof detail === "string" ? detail : JSON.stringify(detail));

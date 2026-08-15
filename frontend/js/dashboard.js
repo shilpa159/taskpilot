@@ -34,7 +34,7 @@ function renderUserChrome() {
 function bindGlobalEvents() {
   document.getElementById("btn-logout").addEventListener("click", () => {
     Auth.clear();
-    window.location.href = "index.html";
+    window.location.href = "login.html";
   });
 
   document.getElementById("btn-new-project").addEventListener("click", () => openProjectModal());
